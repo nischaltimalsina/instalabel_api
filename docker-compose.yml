@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3006:3000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongo:27017/kitchen-labeling
+      - JWT_SECRET=dev_jwt_secret
+      - JWT_EXPIRES_IN=1d
+    depends_on:
+      - mongo
+    command: npm run dev
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27033:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
