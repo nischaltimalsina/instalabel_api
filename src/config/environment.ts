@@ -16,12 +16,12 @@ const environment = {
 
   database: {
     uri: process.env.NODE_ENV === 'test'
-      ? process.env.MONGODB_TEST_URI || 'mongodb://localhost:27017/kitchen-labeling-test'
-      : process.env.MONGODB_URI || 'mongodb://localhost:27017/kitchen-labeling'
+      ? process.env.MONGODB_TEST_URI || 'mongodb://localhost:27033/kitchen-labeling-test'
+      : process.env.MONGODB_URI || 'mongodb://localhost:27033/kitchen-labeling'
   },
 
   jwt: {
-    secret: process.env.JWT_SECRET || 'default_jwt_secret',
+    secret: process.env.JWT_SECRET || 'TELL_ME_WHAT_YOU_WANT_WHAT_YOU_REALLY_REALLY_WANT',
     expiresIn: process.env.JWT_EXPIRES_IN || '1d'
   }
 };
