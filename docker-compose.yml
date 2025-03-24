@@ -1,8 +1,7 @@
-version: '3.8'
-
 services:
   app:
     build: .
+    container_name: "instalabel-api"
     ports:
       - "3006:3000"
     volumes:
@@ -11,21 +10,40 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3000
-      - MONGODB_URI=mongodb://mongo:27017/kitchen-labeling
+      - MONGODB_URI=mongodb://mongo:27017/instalabel
       - JWT_SECRET=dev_jwt_secret
       - JWT_EXPIRES_IN=1d
     depends_on:
       - mongo
     command: npm run dev
     restart: unless-stopped
+    networks:
+      - instalabel_network
 
   mongo:
     image: mongo:latest
+    container_name: "instalabel-db"
     ports:
       - "27033:27017"
     volumes:
       - mongodb_data:/data/db
     restart: unless-stopped
+    networks:
+      - instalabel_network
+
+  mongo-gui:
+    container_name: "instalabel-db-viewer"
+    image: ugleiton/mongo-gui
+    restart: always
+    ports:
+      - "4325:4321"
+    environment:
+      - MONGO_URL=mongodb://instalabel-db:27017/instalabel
+    networks:
+      - instalabel_network
 
 volumes:
   mongodb_data:
+
+networks:
+  instalabel_network:

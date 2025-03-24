@@ -71,7 +71,7 @@ export class LabelService {
           return `${ingredientName} (${i.quantity}${i.unit})`;
         }).join(', '),
         additionalInfo: data.additionalInfo,
-        barcodeData: generateBarcode(barcodeData) // We're still using the same field, just with barcode data now
+        barcodeData: generateBarcode(barcodeData)
       }
     };
 
