@@ -8,6 +8,11 @@ import labelRoutes from './labelRoutes';
 import inventoryItemRoutes from './inventoryItemRoutes';
 import expiryAlertRoutes from './expiryAlertRoutes';
 import allergenRoutes from './allergenRoutes';
+import subscriptionRoutes from './subscriptionRoutes';
+import usageTrackingRoutes from './usageTrackingRoutes';
+import webhookRoutes from './webhookRoutes';
+import adminRoutes from './adminRoutes';
+
 import { errorHandler } from '../middlewares/errorHandler';
 
 export const setupRoutes = (app: Application): void => {
@@ -21,6 +26,10 @@ export const setupRoutes = (app: Application): void => {
   app.use('/api/v1/inventory', inventoryItemRoutes);
   app.use('/api/v1/expiry-alerts', expiryAlertRoutes);
   app.use('/api/v1/allergens', allergenRoutes);
+  app.use('/api/v1/subscriptions', subscriptionRoutes);
+  app.use('/api/v1/usage', usageTrackingRoutes);
+  app.use('/api/v1/webhooks', webhookRoutes);
+  app.use('/api/v1/admin', adminRoutes);
 
   // 404 handler for unknown routes
   app.use('*', (req, res) => {
