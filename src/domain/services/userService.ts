@@ -10,12 +10,17 @@ export class UserService {
     this.userRepository = new UserRepository();
   }
 
-  async createUser(userData: IUser): Promise<UserDocument> {
+  async createUser(userData: Partial<IUser>): Promise<UserDocument> {
     // Validate user data
     this.validateUserData(userData);
 
+    // Ensure that userData is a full implementation of IUser
+    if (!userData._id || !userData.tenantId || !userData.firstName || !userData.lastName || !userData.email || !userData.password) {
+      throw new AppError('Invalid user data', 400);
+    }
+
     // Create the user
-    return this.userRepository.create(userData);
+    return this.userRepository.create(userData as IUser);
   }
 
   async getUserById(id: string): Promise<UserDocument> {
@@ -51,7 +56,7 @@ export class UserService {
     return deletedUser;
   }
 
-  private validateUserData(userData: IUser): void {
+  private validateUserData(userData: Partial<IUser>): void {
     if (!userData.email) {
       throw new AppError('Email is required', 400);
     }

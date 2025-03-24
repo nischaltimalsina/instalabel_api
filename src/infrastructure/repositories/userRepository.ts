@@ -4,7 +4,7 @@ import { AppError } from '../../api/middlewares/errorHandler';
 import * as crypto from 'crypto';
 
 export class UserRepository {
-  async create(userData: IUser): Promise<UserDocument> {
+  async create(userData: Partial<IUser>): Promise<UserDocument> {
     try {
       return await User.create(userData);
     } catch (error:unknown) {

@@ -131,4 +131,12 @@ export class AuthService {
       expiresIn,
     });
   }
+
+  async getMe(userId: string): Promise<UserDocument> {
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new AppError('User not found', 404);
+    }
+      return user;
+    }
 }
