@@ -5,6 +5,8 @@ export interface IIngredient extends Document {
   tenantId: string;
   name: string;
   description?: string;
+  categoryId: string;
+  category?: 'Frozen' | 'Canned' | 'Fresh' | 'Dry' | 'Other';
   allergens: string[];
   nutritionalInfo?: {
     calories?: number;

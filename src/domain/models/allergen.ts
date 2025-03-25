@@ -16,23 +16,18 @@ const AllergenSchema: Schema = new Schema(
     icon: {
       type: String
     },
-    severity: {
-      type: String,
-      enum: ['low', 'medium', 'high'],
-      default: 'medium'
-    },
     isSystemLevel: {
       type: Boolean,
       default: false
+    },
+    relatedIngredients: {
+      type: [String],
+      default: []
     },
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true
-    },
-    tenantId: {
-      type: Schema.Types.ObjectId,
-      ref: 'Tenant'
     }
   },
   {
@@ -41,8 +36,7 @@ const AllergenSchema: Schema = new Schema(
   }
 );
 
-// Compound index for searches
-AllergenSchema.index({ name: 1, isSystemLevel: 1 });
-AllergenSchema.index({ tenantId: 1 }, { sparse: true });
+// Index for searches
+AllergenSchema.index({ name: 1 });
 
 export const Allergen = mongoose.model<IAllergen>('Allergen', AllergenSchema);

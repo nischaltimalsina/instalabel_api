@@ -26,7 +26,7 @@ const environment = {
     secret:
       process.env.JWT_SECRET ||
       "TELL_ME_WHAT_YOU_WANT_WHAT_YOU_REALLY_REALLY_WANT",
-    expiresIn: process.env.JWT_EXPIRES_IN || "1d",
+    expiresIn: process.env.JWT_EXPIRES_IN || "30d",
   },
 };
 

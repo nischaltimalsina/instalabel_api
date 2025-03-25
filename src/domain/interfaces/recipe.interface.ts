@@ -12,7 +12,7 @@ export interface IRecipe extends Document {
   tenantId: string;
   name: string;
   description?: string;
-  category?: string;
+  menuItemCategoryId: string;  // Reference to MenuItemCategory
   version: number;
   status: 'draft' | 'active' | 'archived';
   ingredients: IRecipeIngredient[];

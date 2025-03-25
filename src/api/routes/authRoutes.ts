@@ -10,6 +10,7 @@ router.post('/signup', (req, res, next) => authController.signup(req, res, next)
 router.post('/login', (req, res, next) => authController.login(req, res, next));
 router.post('/forgot-password', (req, res, next) => authController.forgotPassword(req, res, next));
 router.patch('/reset-password/:token', (req, res, next) => authController.resetPassword(req, res, next));
+router.get('/tenant-for-email/:email', (req, res, next) => authController.getTenantForEmail(req, res, next));
 
 // Protected routes
 router.use(protect); // Apply authentication middleware to routes below

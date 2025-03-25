@@ -8,6 +8,7 @@ import labelRoutes from './labelRoutes';
 import inventoryItemRoutes from './inventoryItemRoutes';
 import expiryAlertRoutes from './expiryAlertRoutes';
 import allergenRoutes from './allergenRoutes';
+import categoryRoutes from './categoryRoutes';
 import subscriptionRoutes from './subscriptionRoutes';
 import usageTrackingRoutes from './usageTrackingRoutes';
 import webhookRoutes from './webhookRoutes';
@@ -26,6 +27,7 @@ export const setupRoutes = (app: Application): void => {
   app.use('/api/v1/inventory', inventoryItemRoutes);
   app.use('/api/v1/expiry-alerts', expiryAlertRoutes);
   app.use('/api/v1/allergens', allergenRoutes);
+  app.use('/api/v1/categories', categoryRoutes);
   app.use('/api/v1/subscriptions', subscriptionRoutes);
   app.use('/api/v1/usage', usageTrackingRoutes);
   app.use('/api/v1/webhooks', webhookRoutes);

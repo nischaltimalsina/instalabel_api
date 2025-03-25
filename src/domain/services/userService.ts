@@ -14,8 +14,8 @@ export class UserService {
     // Validate user data
     this.validateUserData(userData);
 
-    // Ensure that userData is a full implementation of IUser
-    if (!userData._id || !userData.tenantId || !userData.firstName || !userData.lastName || !userData.email || !userData.password) {
+    // Ensure that userData has the required fields
+    if (!userData.tenantId || !userData.firstName || !userData.lastName || !userData.email || !userData.password) {
       throw new AppError('Invalid user data', 400);
     }
 

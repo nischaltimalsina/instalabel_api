@@ -18,22 +18,6 @@ export class AllergenService {
       ...allergenData,
       isSystemLevel: true,
       createdBy: userId,
-      tenantId: undefined // No tenant for system allergens
-    } as IAllergen;
-
-    return this.allergenRepository.create(allergen);
-  }
-
-  async createTenantAllergen(tenantId: string, userId: string, allergenData: Partial<IAllergen>): Promise<IAllergen> {
-    // Validate allergen data
-    this.validateAllergenData(allergenData);
-
-    // Create tenant-specific allergen
-    const allergen = {
-      ...allergenData,
-      isSystemLevel: false,
-      tenantId,
-      createdBy: userId
     } as IAllergen;
 
     return this.allergenRepository.create(allergen);
@@ -51,14 +35,6 @@ export class AllergenService {
     return this.allergenRepository.findSystemAllergens();
   }
 
-  async getTenantAllergens(tenantId: string): Promise<IAllergen[]> {
-    return this.allergenRepository.findByTenant(tenantId);
-  }
-
-  async getAllAccessibleAllergens(tenantId: string): Promise<IAllergen[]> {
-    return this.allergenRepository.findAllAccessible(tenantId);
-  }
-
   async updateAllergen(id: string, allergenData: Partial<IAllergen>): Promise<IAllergen> {
     // Prevent changing system-level status through updates
     if (allergenData.isSystemLevel !== undefined) {
@@ -73,11 +49,6 @@ export class AllergenService {
   }
 
   async deleteAllergen(id: string): Promise<IAllergen> {
-    // Get allergen first to check if it's system-level
-    const allergen = await this.getAllergenById(id);
-
-    // Can add additional protection for system allergens here if needed
-
     const deletedAllergen = await this.allergenRepository.delete(id);
     if (!deletedAllergen) {
       throw new AppError('Allergen not found', 404);
@@ -88,10 +59,6 @@ export class AllergenService {
   private validateAllergenData(allergenData: Partial<IAllergen>): void {
     if (!allergenData.name) {
       throw new AppError('Allergen name is required', 400);
-    }
-
-    if (allergenData.severity && !['low', 'medium', 'high'].includes(allergenData.severity)) {
-      throw new AppError('Invalid severity level. Must be low, medium, or high', 400);
     }
   }
 }

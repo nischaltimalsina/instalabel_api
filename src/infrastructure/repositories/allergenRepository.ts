@@ -22,20 +22,6 @@ export class AllergenRepository {
     return Allergen.find({ isSystemLevel: true });
   }
 
-  async findByTenant(tenantId: string): Promise<IAllergen[]> {
-    return Allergen.find({ tenantId, isSystemLevel: false });
-  }
-
-  async findAllAccessible(tenantId: string): Promise<IAllergen[]> {
-    // Return both system allergens and tenant-specific allergens
-    return Allergen.find({
-      $or: [
-        { isSystemLevel: true },
-        { tenantId }
-      ]
-    });
-  }
-
   async update(id: string, allergenData: Partial<IAllergen>): Promise<IAllergen | null> {
     return Allergen.findByIdAndUpdate(id, allergenData, {
       new: true,

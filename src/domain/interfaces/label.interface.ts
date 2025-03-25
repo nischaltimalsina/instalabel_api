@@ -1,6 +1,6 @@
 import { Document, ObjectId } from "mongoose";
 
-export type LabelType = 'prep' | 'allergen' | 'expiry' | 'custom';
+export type LabelType = 'menuItem' | 'ingredient' | 'allergen' | 'expiry' | 'custom';
 
 export interface ILabel extends Document {
   _id: ObjectId;
@@ -20,7 +20,7 @@ export interface ILabel extends Document {
     ingredients?: string;
     storageInstructions?: string;
     additionalInfo?: string;
-    barcodeData?: string;
+    qrCodeData?: string;
   };
   printedBy?: string;
   printedDate?: Date;

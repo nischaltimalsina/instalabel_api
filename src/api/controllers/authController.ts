@@ -2,30 +2,52 @@ import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
 import { AuthService } from "../../domain/services/authService";
 import { UserService } from "../../domain/services/userService";
+import { TenantService } from "../../domain/services/tenantService";
 import { AppError } from "../middlewares/errorHandler";
 import environment from "../../config/environment";
 
 export class AuthController {
   private authService: AuthService;
   private userService: UserService;
+  private tenantService: TenantService;
 
   constructor() {
     this.authService = new AuthService();
     this.userService = new UserService();
+    this.tenantService = new TenantService();
   }
 
   async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { firstName, lastName, email, password, tenantId, role } = req.body;
+      const { 
+        firstName, 
+        lastName, 
+        email, 
+        password,
+        companyName,
+        phone,
+        subscriptionPlan
+      } = req.body;
 
-      // Create new user
+      // First, create a new tenant
+      const tenant = await this.tenantService.createTenant({
+        name: companyName,
+        subscriptionPlan: subscriptionPlan || 'basic', // Default to basic plan
+        contactInfo: {
+          email: email,
+          phone: phone
+        },
+        active: true
+      } as any);
+
+      // Now create the admin user associated with this tenant
       const newUser = await this.userService.createUser({
         firstName,
         lastName,
         email,
         password,
-        tenantId,
-        role: role || "staff",
+        tenantId: tenant._id.toString(),
+        role: "admin", // User is automatically an admin
         isActive: true,
       });
 
@@ -33,7 +55,7 @@ export class AuthController {
       const { user, token } = await this.authService.login({
         email,
         password,
-        tenantId,
+        tenantId: tenant._id.toString(),
       });
 
       // Send response
@@ -49,6 +71,11 @@ export class AuthController {
             role: user.role,
             tenantId: user.tenantId,
           },
+          tenant: {
+            id: tenant._id,
+            name: tenant.name,
+            subscriptionPlan: tenant.subscriptionPlan
+          }
         },
       });
     } catch (error) {
@@ -60,14 +87,26 @@ export class AuthController {
     try {
       const { email, password, tenantId } = req.body;
 
-      if (!email || !password || !tenantId) {
-        throw new AppError("Please provide email, password and tenant ID", 400);
+      if (!email || !password) {
+        throw new AppError("Please provide email and password", 400);
+      }
+
+      let userTenantId = tenantId;
+      
+      // If tenantId is not provided, try to find the user's tenant
+      if (!userTenantId) {
+        // Find user's tenant based on email
+        const tenant = await this.tenantService.getTenantByEmail(email);
+        if (!tenant) {
+          throw new AppError("User not found", 404);
+        }
+        userTenantId = tenant._id.toString();
       }
 
       const { user, token } = await this.authService.login({
         email,
         password,
-        tenantId,
+        tenantId: userTenantId,
       });
 
       // Send response
@@ -211,6 +250,35 @@ export class AuthController {
             lastLogin: user.lastLogin,
           },
         },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getTenantForEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { email } = req.params;
+
+      if (!email) {
+        throw new AppError("Please provide an email address", 400);
+      }
+
+      // Find tenant by email
+      const tenant = await this.tenantService.getTenantByEmail(email);
+      if (!tenant) {
+        throw new AppError("No tenant found for this email address", 404);
+      }
+
+      // Send response with tenant information
+      res.status(200).json({
+        status: "success",
+        data: {
+          tenant: {
+            id: tenant._id,
+            name: tenant.name
+          }
+        }
       });
     } catch (error) {
       next(error);

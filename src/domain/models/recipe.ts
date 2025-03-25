@@ -38,9 +38,11 @@ const RecipeSchema: Schema = new Schema(
       type: String,
       trim: true
     },
-    category: {
-      type: String,
-      trim: true
+    menuItemCategoryId: {
+      type: Schema.Types.ObjectId,
+      ref: 'MenuItemCategory',
+      required: [true, 'Menu Item Category ID is required'],
+      index: true
     },
     version: {
       type: Number,
@@ -86,7 +88,7 @@ const RecipeSchema: Schema = new Schema(
 
 // Indexes for performance
 RecipeSchema.index({ tenantId: 1, name: 1 });
-RecipeSchema.index({ tenantId: 1, category: 1 });
+RecipeSchema.index({ tenantId: 1, menuItemCategoryId: 1 });
 RecipeSchema.index({ tenantId: 1, status: 1 });
 RecipeSchema.index({ tenantId: 1, 'allergens': 1 });
 

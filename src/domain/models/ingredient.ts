@@ -20,6 +20,17 @@ const IngredientSchema: Schema = new Schema(
       type: String,
       trim: true
     },
+    categoryId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Category',
+      required: [true, 'Category ID is required'],
+      index: true
+    },
+    category: {
+      type: String,
+      enum: ['Frozen', 'Canned', 'Fresh', 'Dry', 'Other'],
+      required: false // For legacy support
+    },
     allergens: {
       type: [String],
       default: []
@@ -54,5 +65,7 @@ const IngredientSchema: Schema = new Schema(
 // Indexes for performance
 IngredientSchema.index({ tenantId: 1, name: 1 }, { unique: true });
 IngredientSchema.index({ tenantId: 1, 'allergens': 1 });
+IngredientSchema.index({ tenantId: 1, categoryId: 1 });
+IngredientSchema.index({ tenantId: 1, category: 1 }); // Keep legacy index
 
 export const Ingredient = mongoose.model<IngredientDocument>('Ingredient', IngredientSchema);

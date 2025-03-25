@@ -25,7 +25,7 @@ const LabelSchema: Schema = new Schema(
     },
     labelType: {
       type: String,
-      enum: ['prep', 'allergen', 'expiry', 'custom'],
+      enum: ['menuItem', 'ingredient', 'allergen', 'expiry', 'custom'],
       required: [true, 'Label type is required']
     },
     name: {

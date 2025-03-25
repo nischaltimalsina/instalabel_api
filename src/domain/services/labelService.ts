@@ -53,7 +53,7 @@ export class LabelService {
 
     // Create the prep label
     const label: Partial<ILabel> = {
-      labelType: 'prep',
+      labelType: 'menuItem',
       name: `Prep Label: ${recipe.name}`,
       recipeId: data.recipeId,
       locationId: data.locationId,
@@ -71,7 +71,7 @@ export class LabelService {
           return `${ingredientName} (${i.quantity}${i.unit})`;
         }).join(', '),
         additionalInfo: data.additionalInfo,
-        barcodeData: generateBarcode(barcodeData)
+        qrCodeData: generateBarcode(barcodeData)
       }
     };
 
@@ -106,7 +106,7 @@ export class LabelService {
           return `${ingredientName} (${i.quantity}${i.unit})`;
         }).join(', '),
         additionalInfo: data.additionalInfo,
-        barcodeData: generateBarcode(barcodeData)
+        qrCodeData: generateBarcode(barcodeData)
       }
     };
 
@@ -140,7 +140,7 @@ export class LabelService {
         allergens: ingredient.allergens,
         storageInstructions: data.storageInstructions || 'Store according to ingredient requirements',
         additionalInfo: data.additionalInfo,
-        barcodeData: generateBarcode(barcodeData)
+        qrCodeData: generateBarcode(barcodeData)
       }
     };
 
@@ -176,7 +176,7 @@ export class LabelService {
       locationId: data.locationId,
       content: {
         ...data.content,
-        barcodeData: generateBarcode(barcodeData)
+        qrCodeData: generateBarcode(barcodeData)
       }
     };
 
@@ -261,8 +261,8 @@ export class LabelService {
     }
 
     // Additional validation based on label type
-    if (labelData.labelType === 'prep' && !labelData.recipeId) {
-      throw new AppError('Recipe ID is required for prep labels', 400);
+    if (labelData.labelType === 'menuItem' && !labelData.recipeId) {
+      throw new AppError('Recipe ID is required for menu item labels', 400);
     }
 
     if (labelData.labelType === 'allergen' && !labelData.recipeId) {
@@ -271,6 +271,10 @@ export class LabelService {
 
     if (labelData.labelType === 'expiry' && !labelData.inventoryItemId) {
       throw new AppError('Inventory item ID is required for expiry labels', 400);
+    }
+
+    if (labelData.labelType === 'ingredient' && !labelData.inventoryItemId) {
+      throw new AppError('Inventory Item ID is required for ingredient labels', 400);
     }
   }
 }
